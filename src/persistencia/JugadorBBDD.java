@@ -2,7 +2,7 @@ package persistencia;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,9 +11,9 @@ import persistencia.ConnectionBBDD;
 
 public class JugadorBBDD {
 
-	public Map<Integer, Timestamp> getTimestamps (Jugador jugador) throws Exception{
+	public Map<Integer, Date> getTimestamps (Jugador jugador) throws Exception{
 		
-		Map<Integer,Timestamp> map = new HashMap<Integer,Timestamp>();
+		Map<Integer,Date> map = new HashMap<Integer,Date>();
 		
 		ConnectionBBDD connection = ConnectionBBDD.getInstance();
 
@@ -24,7 +24,7 @@ public class JugadorBBDD {
 		ResultSet rs = preparedStatement.executeQuery();
 
 		while (rs.next()) {
-			map.put(rs.getInt("ID"), rs.getTimestamp("CREATIONTIME"));
+			map.put(rs.getInt("ID"), new Date(rs.getTimestamp("CREATIONTIME").getTime()));
 		}
 		return map;
 	}

@@ -1,18 +1,18 @@
 package domini;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 public class Sudoku {
 	private int idPartida;
-	private Timestamp timestamp;
+	private Date date;
 	private Taulell taulell;
 	private Jugador jugador;
 	private boolean isNew;
 	
 	
-	public Sudoku(int idPartida,Timestamp timestamp, Jugador jugador) {
+	public Sudoku(int idPartida,Date date, Jugador jugador) {
 		this.idPartida = idPartida;
-		this.timestamp = timestamp;
+		this.date = date;
 		this.jugador = jugador;
 	}
 	
@@ -22,11 +22,14 @@ public class Sudoku {
 	public void setIdPartida(int idPartida) {
 		this.idPartida = idPartida;
 	}
-	public Timestamp getTimestamp() {
-		return timestamp;
+	public Date getDate() {
+		return date;
 	}
-	public void setTimestamp(Timestamp timestamp) {
-		this.timestamp = timestamp;
+	public long getTime(){
+		return this.date.getTime();
+	}
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	public Taulell getTaulell() {

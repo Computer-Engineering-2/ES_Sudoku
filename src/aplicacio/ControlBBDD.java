@@ -1,8 +1,7 @@
 package aplicacio;
 
-import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 import domini.Jugador;
@@ -18,10 +17,10 @@ public class ControlBBDD {
 	
 	private Jugador jugador;
 	private Sudoku sudoku;
-	private Map<Integer,Timestamp> partides;
+	private Map<Integer,Date> partides;
 	private boolean online = false;
 
-	public void login() throws SQLException {
+	public void login() throws Exception {
 		ConnectionBBDD.getInstance();
 	}
 	
@@ -55,7 +54,7 @@ public class ControlBBDD {
 		}
 	}
 	
-	public Map<Integer,Timestamp> partides() throws Exception{
+	public Map<Integer,Date> partides() throws Exception{
 		if(this.jugador == null) throw new IllegalStateException("No s'ha carregat el jugador");
 		return this.jugadorBBDD.getTimestamps(this.jugador);
 	}
@@ -86,6 +85,9 @@ public class ControlBBDD {
 	}
 	public void deleteSudoku() throws Exception{
 		sudokuBBDD.delete(this.sudoku);
+	}
+	public boolean playerInitialized(){
+		return this.jugador != null;
 	}
 
 	public void setTaulell(Taulell t) {

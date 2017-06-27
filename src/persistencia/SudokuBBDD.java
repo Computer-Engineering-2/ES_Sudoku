@@ -1,6 +1,7 @@
 package persistencia;
 
 import java.sql.PreparedStatement;
+import java.sql.Timestamp;
 
 import domini.Sudoku;
 
@@ -19,7 +20,7 @@ public class SudokuBBDD {
 		preparedStatement.clearParameters();
 		preparedStatement.setString(1, sudoku.getNomJugador());
 		preparedStatement.setInt(2, sudoku.getIdPartida());
-		preparedStatement.setTimestamp(3, sudoku.getTimestamp());
+		preparedStatement.setTimestamp(3, new Timestamp(sudoku.getTime()));
 		preparedStatement.executeQuery();
 
 		casellaBBDD.insertCaselles(sudoku);

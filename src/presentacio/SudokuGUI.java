@@ -237,13 +237,14 @@ public class SudokuGUI extends JFrame {
 									null, JOptionPane.WARNING_MESSAGE);
 						}
 					}
-				}
-				try {
-					controlBD.finalitzar();
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(new JFrame(),
-							"Hi ha hagut un problema per finalitzar la sesió a la Base de Dades. Si la connexió a internet es correcte, contacta amb l'administrador.",
-							null, JOptionPane.WARNING_MESSAGE);
+
+					try {
+						controlBD.finalitzar();
+					} catch (Exception e) {
+						JOptionPane.showMessageDialog(new JFrame(),
+								"Hi ha hagut un problema per finalitzar la sesió a la Base de Dades. Si la connexió a internet es correcte, contacta amb l'administrador.",
+								null, JOptionPane.WARNING_MESSAGE);
+					}
 				}
 				System.exit(0);
 			}

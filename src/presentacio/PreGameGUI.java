@@ -8,7 +8,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import aplicacio.ControlBBDD;
-import persistencia.SudokuBBDD;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -18,8 +17,7 @@ import javax.swing.SwingConstants;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Map;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
@@ -160,7 +158,7 @@ public class PreGameGUI extends JFrame {
 				controlBBDD.login();
 				controlBBDD.setOnline(true);
 				lblSenseConnexi.setText("Conectat com: G12GEILAB1");
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				String theMessage = "No s'ha pogut conectar amb la Base de Dades. Vol continuar sense conexiÃ³? (No es guardarÃ¡n les partides jugades)";
 				result = JOptionPane.showOptionDialog((Component) null, theMessage, "Error de conexiÃ³:",
 						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
@@ -178,18 +176,19 @@ public class PreGameGUI extends JFrame {
 	    setBounds((screenSize.width-450)/2, (screenSize.height-300)/2, 450, 300);
 
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
-		    @Override
-		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {		        
-		        try {
-					controlBBDD.finalitzar();
-				} catch (Exception e) {
-					JOptionPane.showMessageDialog(new JFrame(),
-						    "Hi ha hagut un problema per finalitzar la sesió a la Base de Dades. Si la connexió a internet es correcte, contacta amb l'administrador.",
-						    null,
-						    JOptionPane.WARNING_MESSAGE);
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				if (controlBBDD.playerInitialized()) {
+					try {
+						controlBBDD.finalitzar();
+					} catch (Exception e) {
+						JOptionPane.showMessageDialog(new JFrame(),
+								"Hi ha hagut un problema per finalitzar la sesió a la Base de Dades. Si la connexió a internet es correcte, contacta amb l'administrador.",
+								null, JOptionPane.WARNING_MESSAGE);
+					}
+					System.exit(0);
 				}
-		        System.exit(0);
-		    }
+			}
 		});
 		
 		// END initComponents
@@ -226,7 +225,7 @@ public class PreGameGUI extends JFrame {
 				}
 			}
 			default: {
-				Map<Integer, Timestamp> llistat = controlBBDD.partides();
+				Map<Integer, Date> llistat = controlBBDD.partides();
 				String[] items = new String[100];
 				int i = 0;
 				for (Integer id : llistat.keySet()) {
