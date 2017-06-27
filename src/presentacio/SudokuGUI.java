@@ -45,7 +45,6 @@ public class SudokuGUI extends JFrame {
 	
 	int customInputs=0;
 	private ControlBBDD controlBD;
-	boolean isNew = false;
 
 	/**
 	 * Create the frame.
@@ -59,7 +58,7 @@ public class SudokuGUI extends JFrame {
 		else this.sudoku.carregarTaulell();
 		
 		initComponents();
-		
+		if(!controlBD.isOnline()) btnGuardarPartida.setEnabled(false);
 		if(!controlBD.isNew()){
 			sudokuContainer.setVisible(true);
 			btnGenerarNouTaulell.setVisible(true);
@@ -225,7 +224,7 @@ public class SudokuGUI extends JFrame {
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
 			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-				if (!menu.isVisible()) {
+				if (!menu.isVisible() && controlBD.isOnline()) {
 					if (JOptionPane.showConfirmDialog(frame, "Vols guardar la partida abans de sortir?", null,
 							JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 						try {
@@ -382,8 +381,10 @@ public class SudokuGUI extends JFrame {
 						JOptionPane.showMessageDialog(null, "Felicitats! Has emplenat totes les cel·les.", "FI JOC.",
 								JOptionPane.INFORMATION_MESSAGE);
 						try {
-							controlBD.deleteSudoku();
-							controlBD.finalitzar();
+							if (controlBD.isOnline()) {
+								controlBD.deleteSudoku();
+								controlBD.finalitzar();
+							}
 							System.exit(0);
 							
 						} catch (Exception e) {

@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import aplicacio.ControlBBDD;
+import persistencia.SudokuBBDD;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -32,7 +33,6 @@ public class PreGameGUI extends JFrame {
 	private ControlBBDD controlBBDD = new ControlBBDD();
 	private JPanel contentPane;
 	private JLabel lblSenseConnexi;
-	private boolean online = false;
 	private JTextField textField;
 	private JList<String> list;
 	DefaultListModel<String> model;
@@ -158,7 +158,7 @@ public class PreGameGUI extends JFrame {
 			try {
 				result = 1;
 				controlBBDD.login();
-				online = true;
+				controlBBDD.setOnline(true);
 				lblSenseConnexi.setText("Conectat com: G12GEILAB1");
 			} catch (SQLException e) {
 				String theMessage = "No s'ha pogut conectar amb la Base de Dades. Vol continuar sense conexi√≥? (No es guardar√°n les partides jugades)";
@@ -169,8 +169,7 @@ public class PreGameGUI extends JFrame {
 			}
 		} while (result == 0);
 
-		if (!online){
-			this.controlBBDD = null;
+		if (!controlBBDD.isOnline()){
 			iniciarSudoku(0);
 			endPreGameScreen();
 		}
@@ -199,7 +198,7 @@ public class PreGameGUI extends JFrame {
 	
 	private void iniciarSudoku(int id){
 		try {
-			controlBBDD.initPartida(id);
+			if(controlBBDD.isOnline()) controlBBDD.initPartida(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -210,17 +209,19 @@ public class PreGameGUI extends JFrame {
 	
 	public void checkGameCount(){
 		try {
-			switch(controlBBDD.gameCount()){
-			case 0: iniciarSudoku(0);break;
-			case 1:{
+			switch (controlBBDD.gameCount()) {
+			case 0:
+				iniciarSudoku(0);
+				break;
+			case 1: {
 				String theMessage = "Hi ha una partida anterior iniciada. Vol recuperar-la o iniciar una nova?";
-				int result = JOptionPane.showOptionDialog((Component) null, theMessage, "Hola "+textField.getText()+": ",
-						JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null,
+				int result = JOptionPane.showOptionDialog((Component) null, theMessage,
+						"Hola " + textField.getText() + ": ", JOptionPane.YES_NO_OPTION,
+						JOptionPane.INFORMATION_MESSAGE, null,
 						new String[] { "Recuperar partida anterior", "Iniciar nova partida" }, "default");
-				if(result == 0) {
+				if (result == 0) {
 					iniciarSudoku(controlBBDD.idPartidaAnterior());
-				}
-				else{
+				} else {
 					iniciarSudoku(0);
 				}
 			}
@@ -229,13 +230,13 @@ public class PreGameGUI extends JFrame {
 				String[] items = new String[100];
 				int i = 0;
 				for (Integer id : llistat.keySet()) {
-					items[i] = "Partida n∫"+id+" ("+llistat.get(id)+")";
+					items[i] = "Partida n∫" + id + " (" + llistat.get(id) + ")";
 					this.idsPartides[i] = id;
 					i++;
 				}
-				 for (int j = 0; j < i; j++){
-					 model.add(j, items[j]);
-				 }
+				for (int j = 0; j < i; j++) {
+					model.add(j, items[j]);
+				}
 			}
 			}
 		} catch (Exception e) {

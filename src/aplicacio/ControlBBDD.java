@@ -19,6 +19,7 @@ public class ControlBBDD {
 	private Jugador jugador;
 	private Sudoku sudoku;
 	private Map<Integer,Timestamp> partides;
+	private boolean online = false;
 
 	public void login() throws SQLException {
 		ConnectionBBDD.getInstance();
@@ -88,12 +89,15 @@ public class ControlBBDD {
 	}
 
 	public void setTaulell(Taulell t) {
-		if(this.sudoku == null) throw new IllegalStateException("No s'ha inicialitzat la partida");
-		this.sudoku.setTaulell(t);
+		if (online) {
+			if (this.sudoku == null)
+				throw new IllegalStateException("No s'ha inicialitzat la partida");
+			this.sudoku.setTaulell(t);
+		}
 	}
 
 	public boolean isNew() {
-		if(this.sudoku == null) throw new IllegalStateException("No s'ha inicialitzat la partida");
+		if(this.sudoku == null) return true;
 		return this.sudoku.isNew();
 	}
 	public void setNew(boolean isNew){
@@ -104,6 +108,6 @@ public class ControlBBDD {
 		this.jugador.setIsPlaying(false);
 		this.jugadorBBDD.setPlaying(this.jugador);
 	}
-
-
+	public void setOnline(boolean online) { this.online = online; }
+	public boolean isOnline(){ return this.online; }
 }
